@@ -41,6 +41,7 @@ class PAPAds():
 
         ret = {
             'source': self.website,
+            'id': add_id,
             'price': data['prix'],
             'price_unit': u'€',
             'room': data['nb_pieces'],
