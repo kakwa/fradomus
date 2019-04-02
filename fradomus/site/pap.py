@@ -51,7 +51,7 @@ class PAPAds():
             'postal_code': None,
             'date': datetime.datetime.fromtimestamp(data['date_classement']),
             'longitude': data['_embedded']['place'][0]['lng'],
-            'lattitude': data['_embedded']['place'][0]['lat'],
+            'latitude': data['_embedded']['place'][0]['lat'],
             'proximity': [],
             'description': data['texte'],
             'link': data['_links']['desktop']['href'],
