@@ -3,8 +3,10 @@
 import requests
 import datetime
 
+from fradomus.site import BaseAds
+
 # Generate the headers for the REST calls
-class PAPAds():
+class PAPAds(BaseAds):
 
     def __init__(self):
         self.website = 'PAP'

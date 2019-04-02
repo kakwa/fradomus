@@ -5,13 +5,15 @@ import time
 import uuid
 import jwt
 
+from fradomus.site import BaseAds
+
 # Some constants used to build the base local JWT token
 AUD_CONST = "SeLoger-Mobile-6.0"
 APP_CONST = "63ee714d-a62a-4a27-9fbe-40b7a2c318e4"
 ISS_CONST = "SeLoger-mobile"
 JWT_CONST = "b845ec9ab0834b5fb4f3a876295542887f559c7920224906bf4bc715dd9e56bc"
 
-class SeLogerAds():
+class SeLogerAds(BaseAds):
 
     def __init__(self):
         self._base_headers = {
