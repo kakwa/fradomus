@@ -74,7 +74,7 @@ class SeLogerAds(BaseAds):
         authed_token = r.text[1:-1]
         self._base_headers['AppToken'] = authed_token
     
-    def get_ad_details(self, add_id):
+    def get_ad_details(self, add_id, raw=True):
         """Recover the details of an ad"""
         ret = None
         r = requests.get("https://api-seloger.svc.groupe-seloger.com/api/v1/listings/%s" % (add_id), headers=self.headers)
@@ -98,12 +98,16 @@ class SeLogerAds(BaseAds):
             'longitude': data['coordinates']['longitude'],
             'latitude': data['coordinates']['latitude'],
             'proximity': [],
+            'picture': [],
             'description': data['description'],
             'link': data['permalink'],
-            'raw': data,
         }
+        if raw:
+            ret['raw'] = data
         for t in data['transportations'].get('available', []):
             ret['proximity'].append(t['name'])
+        for p in data['photos']:
+            ret['picture'].append(p)
         return ret
     
     def get_location(self, cp):
@@ -157,7 +161,7 @@ class SeLogerAds(BaseAds):
         r = requests.post(COUNT_URL, data=json.dumps(SEARCH_PAYLOAD), headers=self.headers)
         return r.json()[0]
     
-    def search(self, cp, min_surf, max_price, ad_type, nb_room_min):
+    def search(self, cp, min_surf, max_price, ad_type, nb_room_min, raw=True):
         """Recover the ads matching a given search
         arg 1: the postal code
         arg 2: the minimal surface
@@ -195,9 +199,10 @@ class SeLogerAds(BaseAds):
         data = r.json()
         ret = {
             'id': [],
-            'raw': data,
             'source': self.website
         }
+        if raw:
+            ret['raw'] = data
         for i in data['items']:
             ret['id'].append(i['id'])
         return ret
@@ -229,4 +234,3 @@ class SeLogerAds(BaseAds):
 #
 #for id in r['id']:
 #    pprint(seloger.get_ad_details(id))
-

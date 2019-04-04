@@ -27,7 +27,7 @@ class PAPAds(BaseAds):
         }
         return headers
 
-    def get_ad_details(self, add_id):
+    def get_ad_details(self, add_id, raw=True):
         """Recover the details of an ad"""
         ret = None
         r = requests.get("https://ws.pap.fr/immobilier/annonces/%s" % \
@@ -55,12 +55,16 @@ class PAPAds(BaseAds):
             'longitude': data['_embedded']['place'][0]['lng'],
             'latitude': data['_embedded']['place'][0]['lat'],
             'proximity': [],
+            'picture': [],
             'description': data['texte'],
             'link': data['_links']['desktop']['href'],
-            'raw': data,
         }
+        if raw:
+            ret['raw'] = data
         for t in data['_embedded'].get('transport', []):
             ret['proximity'].append(t['title'])
+        for p in data['_embedded'].get('photo', []):
+            ret['picture'].append(p['_links']['self']['href'])
         return ret
 
     def get_location(self, cp):
@@ -137,7 +141,7 @@ class PAPAds(BaseAds):
 #pprint(r)
 #
 #r = pap.count(
-#    cp=['75014', '75010', '75013', '75018'],
+#    cp=['75013', '75014', '75018', '75010'],
 #    min_surf=25,
 #    max_price=320000,
 #    ad_type='sell',
@@ -146,7 +150,7 @@ class PAPAds(BaseAds):
 #pprint(r)
 #
 #r = pap.search(
-#    cp=['75014', '75010', '75013', '75018'],
+#    cp=['75013', '75014', '75018', '75010'],
 #    min_surf=25,
 #    max_price=320000,
 #    ad_type='sell',

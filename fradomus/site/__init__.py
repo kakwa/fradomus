@@ -7,7 +7,7 @@ class BaseAds():
     def __init__(self):
         self.website = 'None'
 
-    def get_ad_details(self, add_id):
+    def get_ad_details(self, add_id, raw=True):
         ret = {
             'source': self.website,
             'id': None,
@@ -22,6 +22,7 @@ class BaseAds():
             'longitude': None, 
             'latitude':  None,
             'proximity': [],
+            'pictures': [],
             'description': None,
             'link': None,
             'raw': None,
@@ -43,7 +44,7 @@ class BaseAds():
         """
         return 0
 
-    def search(self, cp, min_surf, max_price, ad_type, nb_room_min):
+    def search(self, cp, min_surf, max_price, ad_type, nb_room_min, raw=True):
         """Recover the ads matching a given search
         arg 1: the postal code
         arg 2: the minimal surface
@@ -51,6 +52,7 @@ class BaseAds():
         arg 4: type of the add ('rent' -> location, 'sell' -> sell)
         arg 5: the owner_id of the search (the user making the search)
         arg 6: nb_room_min, minimum number of rooms
+        arg 7: include the raw data in the return
         """
         ret = {
             'source': self.website,
