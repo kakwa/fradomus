@@ -5,7 +5,7 @@ import sqlalchemy
 from sqlalchemy import create_engine, ForeignKey
 from sqlalchemy import Column, Integer, String
 
-from sqlalchemy.types import DateTime, Boolean, LargeBinary, Text
+from sqlalchemy.types import DateTime, Boolean, LargeBinary, Text, Float, JSON
 
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import relationship
@@ -41,7 +41,7 @@ class DbAds(Base):
     surface_unit = Column(String(30))
     city = Column(String(255))
     postal_code = Column(String(16), nullable=False, index=True)
-    date = Column(DateTime(), nullable=False index=True)
+    date = Column(DateTime(), nullable=False, index=True)
     longitude = Column(Float, nullable=False)
     latitude = Column(Float, nullable=False)
     source = Column(String(30), nullable=False)
@@ -55,19 +55,32 @@ class DbAds(Base):
     proximity = relationship("DbAdsProximity")
     picture = relationship("DbAdsPictures")
 
+    ad_id = Column(Integer, ForeignKey('search.id'))
+
 
 class DbAdsProximity(Base):
-    __tablename__ = 'ads_pictures'
+    __tablename__ = 'ads_proximity'
     id = Column(Integer, primary_key=True)
-    place = Column(String(256), unique=True)
+    place = Column(Text, unique=True)
     ad_id = Column(Integer, ForeignKey('ad.id'))
 
 
 class DbAdsPictures(Base):
     __tablename__ = 'ads_pictures'
     id = Column(Integer, primary_key=True)
-    link = Column(String(256), unique=True)
+    link = Column(Text, unique=True)
     ad_id = Column(Integer, ForeignKey('ad.id'))
+
+
+class Search(Base):
+    __tablename__ = 'search'
+    id = Column(Integer, primary_key=True)
+    postal_codde = Column(String(10), nullable=False)
+    min_surface = Column(Float, nullable=False)
+    max_price = Column(Float, nullable=False)
+    ad_type = Column(String(10), nullable=False)
+    min_room = Column(Integer, nullable=False)
+    proximity = relationship("Db")
 
 
 class DbVersion(Base):
@@ -124,4 +137,4 @@ def get_dbsession(config):
     elif int(version.version) < int(DB_VERSION):
         migrate()
 
-return Session
+    return Session
